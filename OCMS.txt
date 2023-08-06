@@ -1,0 +1,789 @@
+* command to list all databases --->  \l
+
+*command to create database --> CREATE DATABASE ocms
+
+*command to list all tables in database ---> \dt
+
+*command to display specific table ---> select * from table_name;
+________________________________________________________
+
+
+**********Customer Table*********
+
+Create table customers(
+	c_id varchar(10) PRIMARY KEY,
+	c_name VARCHAR(50) NOT NULL,
+	gender VARCHAR(7) NOT NULL,
+	aadhar_no numeric(12) NOT NULL,
+	no_of_kids numeric(10),
+	no_of_adults numeric(10),
+	c_address varchar(50),
+ 	c_email varchar(50) check(c_email like '%@%.com'));
+
+
+create table customer_c_phone(
+	c_phone numeric(10) primary key
+);
+
+alter table customer_c_phone
+	add c_id varchar(10);
+
+alter table customer_c_phone
+	add foreign key(c_id) references customers(c_id);
+
+
+
+********** Route ****************
+
+create table route(
+	r_id varchar(10) PRIMARY KEY,
+	source varchar(50) not null,
+	destination varchar(50)  not null,
+	route_duration varchar check(route_duration like '__:__:__'),
+	pickup_time varchar(50) check(pickup_time like '__:__:__') not null,
+	date date);	
+alter table route
+	add c_id varchar(10);
+
+alter table route
+	add b_id varchar(10);
+
+alter table route 
+	add foreign key(c_id) references customers(c_id);
+
+alter table route
+	add foreign key(b_id) references bill(b_id);
+
+
+********* Feedback***************
+
+create table feedback(
+	f_id varchar(10) primary key,
+	
+	f_type varchar(50),
+	f_description varchar(50)
+);
+
+
+***************** Bill *********************
+
+create table bill(
+	b_id varchar(10) primary key,
+	day varchar(8),
+	date date,
+	b_time varchar check(b_time like '__:__:__')
+
+);
+
+alter table bill
+	add p_id varchar(10);
+
+alter table bill
+	add foreign key(p_id) references payment(p_id);
+
+
+***************** Payment ********************
+
+create table payment(
+	p_id varchar(10) primary key,
+	p_type varchar(8),
+	amount numeric(7,2),
+	p_time varchar check(p_time like '__:__:__'),
+	p_date date,
+	status varchar(10)
+);
+
+alter table payment
+	add f_id varchar(10);
+
+alter table payment
+	add foreign key(f_id) references feedback(f_id);
+
+
+
+************** Cab **************
+
+create table cab(
+	cab_id varchar(10) primary key,
+	cab_type varchar(50),
+	status varchar(20),
+	c_no_plate varchar(10)
+);
+
+alter table cab 
+	add c_id varchar(10);
+
+alter table cab
+	add d_id varchar(10);
+
+alter table cab
+	add foreign key(c_id) references customers(c_id);
+
+alter table cab 
+	add foreign key(d_id) references driver(d_id);
+
+
+************* Driver *************
+
+create table driver(
+	d_id varchar(10) primary key,
+	d_name varchar(50),
+	gender varchar(10),
+	age numeric(4)
+);
+
+create table Driver_d_phone(
+	d_phone numeric(10) primary key
+);
+
+alter table driver_d_phone
+	add d_id varchar(10);
+
+alter table driver_d_phone
+	add foreign key(d_id) references driver(d_id);
+
+
+************ Customer Care **************
+
+create table Customer_care(
+	cc_mail varchar check(cc_mail like '%@%.com)
+);
+
+create table Customercare_cc_phone(
+	cc_phone numeric(10) primary key 
+);
+
+alter table customer_care
+	add foreign key(c_id) references customers(c_id);
+
+alter table customer_care
+	add cc_phone numeric(10);
+
+alter table customer_care
+	add foreign key(cc_phone) references Customercare_cc_phone(cc_phone);
+
+
+************ Organised by ***********
+
+create table organized_by(
+	c_id varchar(10),
+	t_id varchar(10)
+);
+
+
+alter table organized_by 
+	add foreign key(c_id) references customers(c_id);
+
+alter table organized_by
+	add foreign key(t_id) references travel_agency(t_id);
+
+
+************* Travel Agency **********
+
+create table travel_agency(
+	t_id varchar(10) primary key,
+	t_name varchar(50),
+	owner_name varchar(50),
+	t_email varchar check(t_email like'%@%.com')
+);
+
+create table travelagency_t_phone(
+	t_phone numeric(10) primary key
+);
+
+alter table travelagency_t_phone
+	add t_id varchar(10);
+
+alter table travelagency_t_phone
+	add foreign key(t_id) references travel_agency(t_id);
+
+
+
+*************** Provides ********************
+
+create table provides(
+	t_id varchar(10),
+	o_id varchar(10)
+);
+
+alter table provides
+	add foreign key(t_id) references travel_agency(t_id);
+
+alter table provides
+	add foreign key(o_id) references offer(o_id);
+
+
+
+*************** Travel Agent *****************
+
+create table travel_agent(
+	a_id varchar(10) primary key,
+	a_name varchar(50),
+	a_mail varchar check(a_mail like'%@%.com')
+);
+
+create table travelagent_a_phone(
+	a_phone numeric(10) primary key
+);
+
+alter table travelagent_a_phone
+	add a_id varchar(10);
+
+
+
+
+************* Offer *************
+
+create table offer(
+	o_id varchar(10) primary key,
+	
+	o_name varchar(50),
+	o_description varchar(100)
+);
+
+
+
+
+***************************************
+******* Values in Customer**********
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+values('C101','Akash Dubey','Male',404212947826,0,2,'Waniyawad Circle','akashdubey@gmail.com');
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+values('C102','Mann Patel','Male',489291531256
+,2,3,'MahaGujarat Circle','mannpatel@yahoo.com');
+
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+values('C103','Yash Chopra','Male',560191930101,1,1,'Tulsi Heights','yashchopra17@yahoo.com');
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+values('C104','Rajan Patel','Male',748155823564
+,3,1,'Santram Mandir','rajanpatel12@gmail.com');
+
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+values('C105','Manish Patel','Male',819491033491
+,0,1,'Royal Care Hostel','manishpatel37@gmail.com');
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+values('C210','Riya Parekh','Female',673478199382
+,1,3,'Akshar Township','ariyaparekh82@yahoo.com');
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+values('C211','Kinjal Desai','Female',742799197483
+
+,1,5,'Blossom Aura','kinjaldesai@gmail.com');
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+
+values('C212','Aum Rathod','Male',648248373728
+,3,4,'Ayodhya Nagar Society','aumrathod07@gmail.com');
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+
+values('C213','Devansh Shah','Male',186573828281
+,2,2,'Kidney Hospital Circle','devanshshah@yahoo.com');
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+
+values('C214','Kashyap Mehta','Male',827194021737
+,0,1,'Arav Hostel','kashyap12@gmail.com');
+
+insert into customers(c_id,c_name,gender,aadhar_no,no_of_kids,no_of_adults,c_address,c_email)
+
+values('C215','Rima Singh','Female',689291917510
+,2,3,'Gokuldham Society','rimasingh@gmail.com');
+
+
+
+*************** Values in Customer_c_phone *****************
+
+insert into customer_c_phone(c_phone,c_id)
+values(8813651320,'C101');
+insert into customer_c_phone(c_phone,c_id)
+values(8293755251,'C102');
+insert into customer_c_phone(c_phone,c_id)
+values(6735123241,'C103');
+values(9015242118,'C104');
+insert into customer_c_phone(c_phone,c_id)
+values(7625144435,'C105');
+insert into customer_c_phone(c_phone,c_id)
+values(4563209612,'C210');
+insert into customer_c_phone(c_phone,c_id)
+values(7846255410,'C211');
+insert into customer_c_phone(c_phone,c_id)
+values(6732553525,'C212');
+insert into customer_c_phone(c_phone,c_id)
+values(3481883815,'C213');
+insert into customer_c_phone(c_phone,c_id)
+values(7949177905,'C214');
+insert into customer_c_phone(c_phone,c_id)
+values(5691832651,'C215');
+insert into customer_c_phone(c_phone,c_id)
+values(9282710881,'C103');
+insert into customer_c_phone(c_phone,c_id)
+values(7566710016,'C215');
+
+******************* Values in Feedback ***********************
+
+insert into feedback(f_id,f_type,f_description)
+values('F101','Excellent','Book more rides with us.');
+insert into feedback(f_id,f_type,f_description)
+values('F102','Good','Contact our customer care.');
+
+insert into feedback(f_id,f_type,f_description)
+values('F103','Bad','We are sorry for your bad experience.');
+
+
+
+********************** Value in Offer **************************
+
+insert into offer(o_id,o_name,o_description)
+values('O101','Diwali22','Flat 50% off on your bill');
+
+insert into offer(o_id,o_name,o_description)
+values('O102','Cashback','Recieve a cashback of INR 30 on your ride');
+
+insert into offer(o_id,o_name,o_description)
+values('O103','Sunday Special','Flat 10% off on your ride');
+
+insert into offer(o_id,o_name,o_description)
+values('O104','Festive Dhamaka','Flat 20% off on your bill');
+
+
+************************ Value in payment *************************
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P101','Online',150,'01:10:15','12/Mar/2022','Paid','F102');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P102','Cash',200,'09:30:00','05/Aug/2022','Unpaid','F103');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P103','Cash',500,'06:10:52','14/Apr/2022','Paid','F101');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P104','Online',200,'10:35:00','22/Jan/2022','Paid','F101');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P105','Cash',70,'16:20:00','10/Apr/2022','Paid','F102');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P106','Online',650,'18:10:00','03/Nov/2022','Unpaid','F103');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P107','Online',95,'11:00:00','03/Nov/2022','Paid','F103');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P108','Cash',100,'20:30:00','22/Jan/2022','Paid','F102');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P109','Cash',114,'08:00:00','14/Apr/2022','Paid','F103');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P110','Online',225,'10:30:00','10/Apr/2022','Unpaid','F102');
+
+insert into payment(p_id,p_type,amount,p_time,p_date,status,f_id)
+values('P111','Online',299,'16:00:00','05/Aug/2022','Paid','F102');
+
+
+**************************** Value in Bill *********************************
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B101','Monday','05/Aug/2022','09:30:00','P102');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B102','Saturday','03/Nov/2022','18:10:00','P106');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B103','Sunday','22/Jan/2022','10:35:00','P104');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B104','Friday','10/Apr/2022','16:20:00','P105');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B105','Thurday','12/Mar/2022','01:10:15','P101');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B106','Tuesday','14/Apr/2022','06:10:52','P103');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B107','Sunday','03/Nov/2022','11:00:00','P107');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B108','Thursday','14/Apr/2022','08:00:00','P109');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B109','Tuesday','10/Apr/2022','10:30:00','P110');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B110','Saturday','22/Jan/2022','20:30:00','P108');
+
+insert into bill(b_id,day,date,b_time,p_id)
+values('B111','Friday','05/Aug/2022','16:00:00','P111');
+
+
+***************************** Value in route *******************************
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R101','College Road','Nadiad Station','00:15:00','01:10:15','05/Aug/2022','C101','B101');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R102','Waniyawad Circle','Nadiad Station','00:10:00','06:23:22','03/Nov/2022','C102','B102');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R103','Nadia Station','BAPS Temple','00:12:00','16:09:18','22/Jan/2022','C103','B103');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R104','Vegetable Market','Tulsi Hieghts','00:32:00','18:00:00','14/Apr/2022','C104','B106');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R105','Mai Mandir','Royal Care Hostel','00:42:00','17:02:12','10/Apr/2022','C105','B104');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R106','Akshar Township','Santram Temple','00:37:02','11:50:00','03/Nov/2022','C210','B107');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R107','Kheta Lake','Blossom Aura','00:27:45','17:00:00','12/Mar/2022','C211','B105');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R108','Ayodhya Nagar Society','Aquenos Restaurant','00:32:14','20:10:09','14/Apr/2022','C212','B108');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R109','Kidney Hospital Circle','Chocolate Room','00:43:16','11:08:19','10/Apr/2022','C213','B109');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R110','D-Mart','Woodland Restaurant','01:00:10','16:00:12','05/Aug/2022','C214','B111');
+
+insert into route(r_id,source,destination,route_duration,pickup_time,date,c_id,b_id)
+values('R111','Mai Temple','Gokuldham Society','00:23:12','14:02:21','22/Jan/2022','C215','B110');
+
+
+
+
+******************** Value in Travel Agent ***********************
+
+insert into travel_agent(a_id,a_name,a_mail)
+values('A101','Neel Patel','neelpatel17@gmail.com');
+
+insert into travel_agent(a_id,a_name,a_mail)
+values('A102','Ajay Shah','ajayshah9@gmail.com');
+
+insert into travel_agent(a_id,a_name,a_mail)
+values('A103','Deepika Joshi','dipikajoshi65@gmail.com');
+
+insert into travel_agent(a_id,a_name,a_mail)
+values('A104','Tanya Desai','tanyadesai@yahoo.com');
+
+insert into travel_agent(a_id,a_name,a_mail)
+values('A105','Vinay Mehra','vinaymehra@yahoo.com');
+
+insert into travel_agent(a_id,a_name,a_mail)
+values('A106','Jimit Dave','jimitdave37@gmail.com');
+
+insert into travel_agent(a_id,a_name,a_mail)
+values('A107','Jhanvi Tiwawri','jhanvitiwari03@yahoo.com');
+
+insert into travel_agent(a_id,a_name,a_mail)
+values('A108','Veda Parikh','vedaparikh00@gmail.com');
+
+
+
+********************** values in travelagent_a_phone *********************
+
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(9226929391,'A102');
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(9423674756,'A101');
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(8866707588,'A104');
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(7632456782,'A102');
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(8423522901,'A103');
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(9426444677,'A107');
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(9428573915,'A105');
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(9327436314,'A106');
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(9912135631,'A108');
+
+insert into travelagent_a_phone(a_phone,a_id)
+values(9912135632,'A108');
+
+
+*********************** Value in Travel Agency *******************
+
+insert into travel_agency(t_id,t_name,owner_name,t_email)
+values('T101','UBER','Saneep Shah','sandeepshah@gmail.com');
+
+insert into travel_agency(t_id,t_name,owner_name,t_email)
+values('T102','OLA','Tisha Dave','tishadave182@gmail.com');
+
+insert into travel_agency(t_id,t_name,owner_name,t_email)
+values('T103','Red Bus','Tanay Parmar','tanayparnar@gmail.com');
+
+
+
+************************* value in travelagency_t_phone ***************
+
+insert into travelagency_t_phone(t_phone,t_id)
+values(9324561489,'T101');
+
+insert into travelagency_t_phone(t_phone,t_id)
+values(0285263304,'T101');
+
+insert into travelagency_t_phone(t_phone,t_id)
+values(6321257890,'T102');
+
+insert into travelagency_t_phone(t_phone,t_id)
+values(0285252633,'T102');
+
+insert into travelagency_t_phone(t_phone,t_id)
+values(9245729088,'T103');
+
+insert into travelagency_t_phone(t_phone,t_id)
+values(0285263541,'T103');
+
+
+******************* value in provides *********************
+insert into provides(pr_id,t_id,o_id)
+values('PR101','T101','O102');
+
+insert into provides(pr_id,t_id,o_id)
+values('PR102','T101','O104');
+
+insert into provides(pr_id,t_id,o_id)
+values('PR103','T102','O102');
+
+insert into provides(pr_id,t_id,o_id)
+values('PR104','T102','O103');
+
+insert into provides(pr_id,t_id,o_id)
+values('PR105','T103','O101');
+
+insert into provides(pr_id,t_id,o_id)
+values('PR106','T103','O102');
+
+insert into provides(pr_id,t_id,o_id)
+values('PR107','T101','O103');
+
+
+**************** value in organized_by *********************
+insert into organized_by(ob_id,c_id,t_id)
+values('OB101','C101','T103');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB102','C102','T102');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB103','C103','T101');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB104','C104','T103');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB105','C105','T102');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB106','C210','T101');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB107','C211','T102');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB108','C212','T102');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB109','C213','T103');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB110','C214','T103');
+
+insert into organized_by(ob_id,c_id,t_id)
+values('OB111','C215','T101');
+
+
+********************** values in driver ********************
+
+insert into driver(d_id,d_name,gender,age)
+values('D101','Rajendra Singh','Male',36);
+
+insert into driver(d_id,d_name,gender,age)
+values('D102','Manishkumar Babu','Male',32);
+
+insert into driver(d_id,d_name,gender,age)
+values('D103','Narayan Govind','Male',41);
+
+insert into driver(d_id,d_name,gender,age)
+values('D104','Rakesh Jadeja','Male',43);
+
+insert into driver(d_id,d_name,gender,age)
+values('D105','Kirti Seth','Male',47);
+
+insert into driver(d_id,d_name,gender,age)
+values('D106','Jayant Nagar','Male',39);
+
+insert into driver(d_id,d_name,gender,age)
+values('D107','Joseph Bindu','Male',36);
+
+insert into driver(d_id,d_name,gender,age)
+values('D108','Rajesh Kuwant','Male',44);
+
+************************ values in driver_d_phone *******************
+
+insert into driver_d_phone(d_phone,d_id)
+values(9392817171,'D101');
+
+insert into driver_d_phone(d_phone,d_id)
+values(8917100514,'D102');
+
+insert into driver_d_phone(d_phone,d_id)
+values(7818031346,'D103');
+
+insert into driver_d_phone(d_phone,d_id)
+values(9016638861,'D104');
+
+insert into driver_d_phone(d_phone,d_id)
+values(8872702525,'D105');
+
+insert into driver_d_phone(d_phone,d_id)
+values(6893822266,'D106');
+
+insert into driver_d_phone(d_phone,d_id)
+values(7283616010,'D107');
+
+insert into driver_d_phone(d_phone,d_id)
+values(9019271124,'D108');
+
+************************ values in customer_care *********************
+
+alter table customer_care drop column cc_phone;
+alter table customer_care drop column cc_mail;
+alter table customer_care add column cc_mail varchar(50) check(cc_mail like '%@%.com');
+alter table customer_care add primary key(cc_mail);
+alter table customer_care add column cc_phone numeric(10);
+
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C101','customercare001@gmail.com',8887773333);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C102','customercare002@gmail.com',7776662211);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C103','customercare003@gmail.com',4343787811);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C104','customercare002@gmail.com',7776662211);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C105','customercare001@gmail.com',8887773333);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C210','customercare003@gmail.com',4343787811);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C211','customercare002@gmail.com',7776662211);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C212','customercare001@gmail.com',8887773333);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C213','customercare002@gmail.com',7776662211);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C214','customercare001@gmail.com',8887773333);
+
+insert into customer_care(c_id,cc_mail,cc_phone)
+values('C215','customercare002@gmail.com',7776662211);
+
+
+
+************************ values in cab **************************
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB101','Sedan','Available','GJ07AB3178','C103','D103');
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB102','Micro','Unavailable','GJ05AB9201','C104','D102');
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB103','Minibus','Available','GJ03CK9282','C101','D105');
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB104','SUV','Unavailable','GJ01BN1726','C210','D104');
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB105','Sedan','Available','GJ21DF2731','C102','D106');
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB106','SUV','Unavailable','GJ12CZ2525','C105','D108');
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB107','Micro','Available','GJ16DF3178','C215','D107');
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB108','Sedan','Available','GJ07FE5141','C214','D101');
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB109','SUV','Available','GJ15KJ1515','C213','D102');
+
+insert into cab(cab_id,cab_type,status,c_no_plate,c_id,d_id)
+values('CAB110','Micro','Available','GJ09GH1783','C212','D108');
+
+
+
+
+***************************** Queries *****************************
+
+***************************** Final Queries ***************************
+
+
+1. Find customer who booked cab on 05/08/2022 date from  College Road to Nadiad Station.
+
+select customers.c_id, customers.c_name, route.date from customers inner join route on route.c_id = customers.c_id where route.date = '05/08/2022' and source = 'College Road' and destination = 'Nadiad Station';
+
+or 
+
+select *, route.date from customers inner join route on route.c_id = customers.c_id where route.date = '05/08/2022' and source = 'College Road' and destination = 'Nadiad Station';
+
+_________________________________________________________________________________________________________________________
+
+2. Find total number of customers with pending status.
+
+select count(route.c_id) from route inner join bill on route.b_id = bill.b_id inner join payment on payment.p_id = bill.p_id where payment.status = 'Unpaid'; 
+
+or
+
+select * from route inner join bill on route.b_id = bill.b_id inner join payment on payment.p_id = bill.p_id where payment.status = 'Unpaid';
+
+_________________________________________________________________________________________________________________________
+
+3. Display total offers provides all agency name;
+
+select travel_agency.t_name, offer.o_name from travel_agency inner join provides on travel_agency.t_id = provides.t_id inner join  offer on offer.o_id = provides.o_id where travel_agency.t_name = 'UBER';
+
+or 
+
+select travel_agency.t_name, offer.o_name from travel_agency inner join provides on travel_agency.t_id = provides.t_id inner join  offer on offer.o_id = provides.o_id;
+
+_________________________________________________________________________________________________________________________
+
+4. Display name of customers who have done successful online payment.
+
+
+select customers.c_name,payment.p_type from customers inner join route on customers.c_id = route.c_id inner join bill on route.b_id = bill.b_id inner join payment on bill.p_id = payment.p_id where payment.p_type = 'Online' and payment.status = 'Paid';
